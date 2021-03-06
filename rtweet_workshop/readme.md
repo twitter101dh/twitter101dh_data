@@ -116,7 +116,7 @@ Bob Rudis, 21 Recipes for Mining Twitter Data with rtweet, 2018:
 https://rud.is/books/21-recipes/
 
 Mareike König, Paul Ramisch, Die twitternde Zunft, 2021:
-https://owncloud.gwdg.de/index.php/s/H3sYrTh3C1mAJx0
+youtu.be/jExzEPveKHY
 
 vdHD21:
 https://vdhd2021.hypotheses.org/189
