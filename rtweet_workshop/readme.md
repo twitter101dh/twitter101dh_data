@@ -1,4 +1,6 @@
-# Einführung Twitter API
+# Einführung Twitter API & rtweet
+In diesem Verzeichnis gibt es alle zugehörigen Dateien und Code-Beispiele für den Video-Workshop zur Nutzung der Twitter-API mit rtweet im Rahmen des vDHd2021.
+Link zum Video: https://vimeo.com/520272371
 
 ## Inhalt
 1. Kurze Einführung Twitter API
