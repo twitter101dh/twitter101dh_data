@@ -146,3 +146,104 @@ bib_tweets %>%
 # Wichtig dabei: FileEncoding
 write_as_csv(bib_tweets, "210305_bib_tweets.csv", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
 saveRDS(bib_tweets, file = "210305_bib_tweets.rds")
+
+# Zoom-Sitzung
+# Libraries neu laden
+library(rtweet)
+library(tidyverse)
+
+# Encoding: Neue Informationen hinzufügen
+# Exportieren der Daten, z.B. in OpenOffice bearbeiten, wieder importieren
+write_as_csv(bibliotheken, "bibliotheken.csv", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+bibliotheken_import <- read_twitter_csv("bibliotheken.csv")
+
+# Informationen ergänzen in der Tabelle Bibliotheken
+bibliotheken$typ <- NA
+for (i in 1:nrow(bibliotheken)) {
+    print(i)
+    bibliotheken$typ[i] <- bibliotheken_import$typ[bibliotheken_import$user_id == bibliotheken$user_id[i]]
+}
+
+# Informationen ergänzen in der Tabelle gefilteter Tweets
+bib_tweets$typ <- NA
+for (i in 1:nrow(bib_tweets)) {
+    bib_tweets$typ[i] <- bibliotheken_import$typ[bibliotheken_import$user_id == bib_tweets$user_id[i]]
+}
+
+# Informationen ergänzen in der Tabelle aller Tweets
+bib_tweets_raw$typ <- NA
+for (i in 1:nrow(bib_tweets_raw)) {
+    bib_tweets_raw$typ[i] <- bibliotheken_import$typ[bibliotheken_import$user_id == bib_tweets$user_id[i]]
+}
+
+# Statistiken Typ
+# Händische Methode
+sum(bibliotheken$typ == "u")
+# Automatisch Methode mit dem Package tidyverse / dyplr
+bibliotheken %>% group_by(typ) %>% summarise(anzahl = n())
+
+## Tweets im Zeitverlauf und Typ: Graph zur Visualisierung der gefilterten Tweets
+ts_plot(bib_tweets, "weeks") +
+  labs(x = NULL, y = NULL,
+       title = "Frequenz von Tweets der untersuchten Bibliotheken und Hashtags",
+       subtitle = paste0(format(min(bib_tweets$created_at), "%d %B %Y"), " to ", format(max(bib_tweets$created_at),"%d %B %Y")),
+       caption = "Daten abgerufen mit Twitters API via rtweet") +
+  theme_minimal()
+
+bib_tweets %>% dplyr::group_by(typ) %>%  ts_plot("weeks")
+
+## Tweets im Zeitverlauf und Typ: Graph zur Visualisierung aller Tweetrs
+ts_plot(bib_tweets_raw, "weeks") +
+  labs(x = NULL, y = NULL,
+       title = "Frequenz von Tweets der untersuchten Bibliotheken und Hashtags",
+       subtitle = paste0(format(min(bib_tweets_raw$created_at), "%d %B %Y"), " to ", format(max(bib_tweets_raw$created_at),"%d %B %Y")),
+       caption = "Daten abgerufen mit Twitters API via rtweet") +
+  theme_minimal()
+
+bib_tweets_raw %>% dplyr::group_by(typ) %>%  ts_plot("weeks")
+
+# Vorgehen um Follower zu scrappen
+## Feld um anzeigen, ob Person bereits gescrapped wurde
+bibliotheken$follower_scraped <- FALSE
+followers_all <- data.frame(user_id=character(), friend_of_id=character())
+
+## Algorithmus Get Follower (begrenzt auf Maximial 10.000 Follower, kann auch größer sein)
+for (i in 1:nrow(bibliotheken)) {
+  if (bibliotheken$follower_scraped[i] == FALSE){
+    temp <- data.frame(user_id=character(), followed_id=character())
+    temp <- get_followers(bibliotheken$user_id[i], 
+      n = 10000,
+      page = "-1",
+      retryonratelimit = TRUE,
+      parse = TRUE,
+      verbose = TRUE,
+      token = token
+    )
+    message("Stand: ", i, "/", nrow(bibliotheken)) 
+    temp$followed_id <- bibliotheken$user_id[i]
+    followers_all <- rbind(followers_all, temp)
+    bibliotheken$follower_scraped[i] <- TRUE
+  }
+}
+
+## Improved Algorithm with dplyr
+library(dplyr)
+follower_list <- data.frame(user_id=character(), 
+                 follower_id=character()) 
+
+for (i in 1:nrow(bibliotheken)) {
+  temp<-filter(followers_all, followed_id == bibliotheken$user_id[i])
+  names(temp)<-c("follower_id","user_id")
+  temp <- temp[c("user_id", "follower_id")]
+  follower_list <- rbind(follower_list, temp)
+}
+
+# Follower filtern, die nicht zur Community gehören
+follower_list <- filter(follower_list, follower_id %in% bibliotheken$user_id)
+
+# Duplikate filtern
+follower_list <- unique(follower_list)
+
+# Export für Gephi
+write_as_csv(follower_list, "follower_list_gephi.csv", prepend_ids = FALSE, na = "", fileEncoding = "UTF-8")
+write_as_csv(bibliotheken, "bibliotheken_gephi.csv", prepend_ids = FALSE, na = "", fileEncoding = "UTF-8")
