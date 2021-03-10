@@ -3,7 +3,7 @@ import pandas as pd
 import argparse
 
 # add command-line options
-parser = argparse.ArgumentParser(description='A Script for transforming csv (tweet) files to an adjacency matrix')
+parser = argparse.ArgumentParser(description='A Script for transforming csv (tweet) files to an adjacency list.')
 parser.add_argument("--i", default=1, help="the input variable, should be in csv format")
 parser.add_argument("--o", default=1, help="the output variable, should be in csv format")
 parser.add_argument("--c", default=1, help="the column that should be transformed into an adjacency list")
