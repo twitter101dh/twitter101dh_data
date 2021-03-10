@@ -1,6 +1,6 @@
 # csv2adj
 
-A Script for transforming csv (tweet) files to an adjacency matrix.
+A Script for transforming csv (tweet) files to an adjacency list.
 
 ## Prerequisites
 * [Python](https://www.python.org/)
