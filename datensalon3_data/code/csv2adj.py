@@ -16,8 +16,9 @@ c = args.col
 #read csv as dataframe
 data = pd.read_csv(i, index_col=0, parse_dates=True) #i = Name (/Pfad) der CSV-Datei ändern
 
-#drop NaN values in col c
-data=data.dropna(subset=[c]) 
+#drop NaN values in col c (in case there are any)
+if data[c].isnull().values.any():
+    data=data.dropna(subset=[c]) 
 
 # define function to see if row contains only one word or more than one word (=contains whitespace)
 # turn all strings to lowercase characters here as well
