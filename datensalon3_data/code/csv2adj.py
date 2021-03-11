@@ -4,14 +4,14 @@ import argparse
 
 # add command-line options
 parser = argparse.ArgumentParser(description='A Script for transforming csv (tweet) files to an adjacency list.')
-parser.add_argument("--i", default="input.csv", help="the input file, should be in csv format")
-parser.add_argument("--o", default="output.csv", help="the output file, should be in csv format")
-parser.add_argument("--c", default="hashtags", help="the column that should be transformed into an adjacency list")
+parser.add_argument("-i", "--input", default="input.csv", help="the input file, should be in csv format")
+parser.add_argument("-o", "--output", default="output.csv", help="the output file, should be in csv format")
+parser.add_argument("-c", "--col", default="hashtags", help="the column that should be transformed into an adjacency list")
 
 args = parser.parse_args()
-i = args.i
-o = args.o
-c = args.c
+i = args.input
+o = args.output
+c = args.col
 
 #read csv as dataframe
 data = pd.read_csv(i, index_col=0, parse_dates=True) #i = Name (/Pfad) der CSV-Datei ändern
