@@ -8,7 +8,7 @@ A Script for transforming csv (tweet) files to an adjacency list.
 
 ## Usage
 
-**usage:** csv2adj&#46;py [-h] [--i I] [--o O] [--c C]
+**usage:** csv2adj&#46;py [-h] [-i I] [-o O] [-c C]
 
 **arguments:**<br>
   -h, --help            show this help message and exit <br>
@@ -22,4 +22,4 @@ A Script for transforming csv (tweet) files to an adjacency list.
 **example:** 
 * change to command line
 * navigate to your folder
-* python csv2adj&#46;py --i input.csv --o output.csv --c hashtags
+* python csv2adj&#46;py -i input.csv -o output.csv -c hashtags
