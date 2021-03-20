@@ -79,8 +79,8 @@ tweets_search2 <- search_tweets(
 )
 
 # Suche im vollen Archiv
-# In größerem Umfang nur mit Premium Zugang möglich (so begrenzt auf maximal 5.000 Tweets)
-tweets <- search_fullarchive("#bibathome", n = 500, env_name="Archive", token = token, fromDate="202002010000" toDate = "202102010000")
+# In größerem Umfang nur mit Premium Zugang möglich (so begrenzt auf maximal 5.000 Tweets) (vorher erst Environment anlegen! Der Environment Name muss dann bei Archive stehen)
+tweets <- search_fullarchive("#bibathome", n = 500, env_name="Archive", token = token, fromDate="202002010000", toDate = "202102010000")
 
 
 # Neben relevanten Tweets, auch vieles, was nicht relevant ist
